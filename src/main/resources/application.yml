@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: order-event-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/orders}
+    username: ${DB_USERNAME:orders}
+    password: ${DB_PASSWORD:orders}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+server:
+  port: ${SERVER_PORT:8080}
+app:
+  messaging:
+    exchange: ${ORDER_EXCHANGE:orders.events}
+    order-created-routing-key: ${ORDER_CREATED_ROUTING_KEY:order.created}
+    order-created-queue: ${ORDER_CREATED_QUEUE:orders.created.audit}
+  outbox:
+    poll-interval-ms: ${OUTBOX_POLL_INTERVAL_MS:5000}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

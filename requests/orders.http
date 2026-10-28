@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:8081
+### Create an order; repeat with the same reference and payload for an idempotent response
+POST {{baseUrl}}/api/v1/orders
+Content-Type: application/json
+
+{
+  "clientReference": "web-checkout-2027-0001",
+  "customerEmail": "alex@example.ie",
+  "amount": 129.95,
+  "currency": "EUR"
+}
+### List orders
+GET {{baseUrl}}/api/v1/orders?page=0&size=20
